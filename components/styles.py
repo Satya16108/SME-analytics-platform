@@ -11,6 +11,7 @@ def inject_css():
         --brand-mid: #18A88F;
         --brand-soft: #E8F7F1;
         --brand-accent: #27C1A3;
+        --brand-gold: #D4AF37;
         --brand-muted: #4D7F78;
         --brand-border: #D7ECE6;
     }
@@ -44,12 +45,13 @@ def inject_css():
         box-shadow:0 14px 25px rgba(10,67,57,0.22);
     }
     .sb-logo-img {
-        display:block; width: 3.2rem; height: 3.2rem; margin: 0 auto;
+        display:block; max-width: 3.2rem; max-height: 3.2rem; width:auto; height:auto; margin: 0 auto;
         object-fit: contain; border-radius: 18px;
     }
     .hdr-logo-img {
-        display:block; width: 3rem; height: 3rem; object-fit: contain;
+        display:block; max-width: 3rem; max-height: 3rem; width:auto; height:auto; object-fit:contain;
     }
+    .svg-logo { display:inline-flex; align-items:center; justify-content:center; }
     .sb-title { font-size:0.92rem; font-weight:700; color:#FFFFFF !important;
                 text-align:center; letter-spacing:0.3px; line-height:1.4; }
     .sb-sub   { font-size:0.68rem; color:#BDE8DC !important; text-align:center; margin-top:0.15rem; }
@@ -84,6 +86,8 @@ def inject_css():
         color:#FFFFFF; font-size:1.1rem; font-weight:800;
         box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18);
     }
+    .page-hdr-title span { color: var(--brand-gold); font-weight:800; font-size:1.2rem; }
+    .svg-logo svg { width: 3rem; height: 3rem; display:block; }
     .page-hdr-sub  { font-size:0.88rem; color:rgba(255,255,255,0.75); margin:0; }
     .page-hdr-badge {
         display:inline-block; background:rgba(255,255,255,0.18);
@@ -139,7 +143,7 @@ def inject_css():
     }
     .sector-card:hover { box-shadow:0 6px 20px rgba(0,0,0,0.11); transform:translateY(-1px); }
     .sc-head   { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.55rem; }
-    .sc-name   { font-size:0.97rem; font-weight:700; color:var(--brand-dark); }
+    .sc-name   { font-size:0.97rem; font-weight:700; color:var(--card-accent, var(--brand-dark)); }
     .sc-tag    { background:var(--brand-soft); color:var(--brand-mid); font-size:0.68rem;
                  font-weight:600; padding:0.18rem 0.6rem; border-radius:12px; }
     .sc-prob   { font-size:0.79rem; color:#5D6D7E; margin-bottom:0.3rem; }

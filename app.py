@@ -49,7 +49,8 @@ def load_sidebar_logo():
     for logo_path in candidates:
         if logo_path.exists():
             if logo_path.suffix.lower() == ".svg":
-                return logo_path.read_text(encoding="utf-8")
+                svg = logo_path.read_text(encoding="utf-8")
+                return f'<div class="svg-logo">{svg}</div>'
             mime = "image/png" if logo_path.suffix.lower() == ".png" else "image/jpeg"
             encoded = b64encode(logo_path.read_bytes()).decode("utf-8")
             return f'<img src="data:{mime};base64,{encoded}" class="sb-logo-img" />'
@@ -121,11 +122,24 @@ def load_logo_svg():
     for path in logo_candidates:
         if path.exists():
             if path.suffix.lower() == ".svg":
-                return path.read_text(encoding="utf-8")
+                svg = path.read_text(encoding="utf-8")
+                return f'<div class="svg-logo">{svg}</div>'
             mime = "image/png" if path.suffix.lower() == ".png" else "image/jpeg"
             encoded = b64encode(path.read_bytes()).decode("utf-8")
             return f"<img src=\"data:{mime};base64,{encoded}\" class=\"hdr-logo-img\"/>"
     return "<span class=\"hdr-logo\">A</span>"
+
+
+def hex_to_rgba(hex_color: str, alpha: float = 1.0) -> str:
+    """Convert hex color like #RRGGBB to rgba(...) string with given alpha."""
+    h = hex_color.lstrip('#')
+    if len(h) == 3:
+        h = ''.join([c*2 for c in h])
+    try:
+        r, g, b = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+        return f'rgba({r}, {g}, {b}, {alpha})'
+    except Exception:
+        return hex_color
 
 
 def _home():
@@ -171,20 +185,21 @@ def _home():
                 break
             key, sec = items[i + j]
             with col:
-                st.markdown(f"""
-                <div class="sector-card"
-                     style="border-left:5px solid {sec['accent']}">
-                  <div class="sc-head">
-                    <span class="sc-name">{sec['display_name']}</span>
-                    <span class="sc-tag">{sec['subtitle']}</span>
-                  </div>
-                  <div class="sc-prob">
-                    <b>Core Problem:</b> {sec['core_problem']}
-                  </div>
-                  <div class="sc-model">
-                    🤖 <b>ML Model:</b> {sec['ml_model']}
-                  </div>
-                </div>""", unsafe_allow_html=True)
+                                accent = sec.get('accent', COLORS.get('navy'))
+                                tag_bg = hex_to_rgba(accent, 0.10)
+                                st.markdown(f"""
+                                <div class="sector-card" style="border-left:5px solid {accent}; --card-accent:{accent};">
+                                    <div class="sc-head">
+                                        <span class="sc-name" style="color:{accent};">{sec['display_name']}</span>
+                                        <span class="sc-tag" style="background:{tag_bg}; color:{accent};">{sec['subtitle']}</span>
+                                    </div>
+                                    <div class="sc-prob">
+                                        <b>Core Problem:</b> {sec['core_problem']}
+                                    </div>
+                                    <div class="sc-model">
+                                        🤖 <b>ML Model:</b> {sec['ml_model']}
+                                    </div>
+                                </div>""", unsafe_allow_html=True)
 
     st.markdown("---")
     with st.expander("📐 Platform Architecture & Scalability Guide", expanded=False):
