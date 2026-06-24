@@ -25,8 +25,8 @@ CHART_COLORS = [
 ]
 
 PLATFORM_CONFIG = {
-    "name":     "Decision Intelligence Platform",
-    "subtitle": "AI-Powered Analytics for Indian SMEs",
+    "name":     "Anviksha",
+    "subtitle": "AI-Powered Decision Intelligence for Indian SMEs",
     "version":  "v1.0.0",
 }
 

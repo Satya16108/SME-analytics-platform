@@ -11,6 +11,9 @@ Architecture:
 """
 
 import importlib
+from base64 import b64encode
+from pathlib import Path
+
 import streamlit as st
 
 from config import SECTOR_REGISTRY, PLATFORM_CONFIG, COLORS
@@ -18,8 +21,8 @@ from components.styles import inject_css
 
 # ── Page configuration (must be first Streamlit call) ───────
 st.set_page_config(
-    page_title="Decision Intelligence Platform | Indian SMEs",
-    page_icon="🧠",
+    page_title="Anviksha | Decision Intelligence Platform",
+    page_icon="🅰️",
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={"About": (
@@ -33,10 +36,31 @@ inject_css()
 
 
 # ── SIDEBAR ─────────────────────────────────────────────────
+def load_sidebar_logo():
+    asset_folder = Path("assets")
+    candidates = [
+        asset_folder / "anviksha-logo.svg",
+        asset_folder / "Anviksha logo.svg",
+        asset_folder / "anviksha-logo.png",
+        asset_folder / "Anviksha logo.png",
+        asset_folder / "anviksha-logo.jpg",
+        asset_folder / "Anviksha logo.jpg",
+    ]
+    for logo_path in candidates:
+        if logo_path.exists():
+            if logo_path.suffix.lower() == ".svg":
+                return logo_path.read_text(encoding="utf-8")
+            mime = "image/png" if logo_path.suffix.lower() == ".png" else "image/jpeg"
+            encoded = b64encode(logo_path.read_bytes()).decode("utf-8")
+            return f'<img src="data:{mime};base64,{encoded}" class="sb-logo-img" />'
+    return '<div class="sb-logo">A</div>'
+
+
 def _sidebar():
     with st.sidebar:
+        logo_html = load_sidebar_logo()
         st.markdown(f"""
-        <div class="sb-logo">🧠</div>
+        {logo_html}
         <div class="sb-title">{PLATFORM_CONFIG['name']}</div>
         <div class="sb-sub">{PLATFORM_CONFIG['subtitle']}</div>
         """, unsafe_allow_html=True)
@@ -83,12 +107,37 @@ def _sidebar():
 
 
 # ── HOME PAGE ────────────────────────────────────────────────
+
+def load_logo_svg():
+    asset_folder = Path("assets")
+    logo_candidates = [
+        asset_folder / "anviksha-logo.svg",
+        asset_folder / "Anviksha logo.svg",
+        asset_folder / "anviksha-logo.png",
+        asset_folder / "Anviksha logo.png",
+        asset_folder / "anviksha-logo.jpg",
+        asset_folder / "Anviksha logo.jpg",
+    ]
+    for path in logo_candidates:
+        if path.exists():
+            if path.suffix.lower() == ".svg":
+                return path.read_text(encoding="utf-8")
+            mime = "image/png" if path.suffix.lower() == ".png" else "image/jpeg"
+            encoded = b64encode(path.read_bytes()).decode("utf-8")
+            return f"<img src=\"data:{mime};base64,{encoded}\" class=\"hdr-logo-img\"/>"
+    return "<span class=\"hdr-logo\">A</span>"
+
+
 def _home():
-    st.markdown("""
+    logo_html = load_logo_svg()
+    st.markdown(f"""
     <div class="page-hdr">
-      <div class="page-hdr-title">🧠 Decision Intelligence Platform</div>
+      <div class="page-hdr-title">
+        {logo_html}
+        <span>Anviksha</span>
+      </div>
       <div class="page-hdr-sub">
-        AI-Powered Analytics &amp; ML Insights — Built for Indian SMEs
+        Decision Intelligence Platform for Indian SMEs
       </div>
       <span class="page-hdr-badge">5 Sector Modules · 5 ML Models · Scalable Architecture</span>
     </div>""", unsafe_allow_html=True)
